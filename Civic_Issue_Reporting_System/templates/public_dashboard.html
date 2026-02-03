@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Public Dashboard - Civic Issue Reporting System{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+    <h2>Public Issue Dashboard</h2>
+    <p>View all reported civic issues and their current status.</p>
+    {% if issues %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Reported By</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for issue in issues %}
+                    <tr>
+                        <td>{{ issue.title }}</td>
+                        <td>{{ issue.description }}</td>
+                        <td>{{ issue.location }}</td>
+                        <td class="status-{{ issue.status }}">{{ issue.status }}</td>
+                        <td>{{ issue.name }}</td>
+                        <td>{{ issue.created_at }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No issues reported yet.</p>
+    {% endif %}
+</section>
+{% endblock %}

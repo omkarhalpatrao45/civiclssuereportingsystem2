@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Civic Issue Reporting System{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+    <h2><i class="fas fa-list"></i> My Reported Issues</h2>
+    {% if issues %}
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-tag"></i> Title</th>
+                        <th><i class="fas fa-align-left"></i> Description</th>
+                        <th><i class="fas fa-map-marker-alt"></i> Location</th>
+                        <th><i class="fas fa-info-circle"></i> Status</th>
+                        <th><i class="fas fa-calendar"></i> Created At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for issue in issues %}
+                        <tr>
+                            <td>{{ issue.title }}</td>
+                            <td>{{ issue.description }}</td>
+                            <td>{{ issue.location }}</td>
+                            <td class="status-{{ issue.status }}">
+                                {% if issue.status == 'pending' %}
+                                    <i class="fas fa-clock"></i>
+                                {% elif issue.status == 'in_progress' %}
+                                    <i class="fas fa-spinner"></i>
+                                {% elif issue.status == 'resolved' %}
+                                    <i class="fas fa-check-circle"></i>
+                                {% endif %}
+                                {{ issue.status }}
+                            </td>
+                            <td>{{ issue.created_at }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <p>You haven't reported any issues yet. <a href="{{ url_for('report') }}">Report one now</a>.</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

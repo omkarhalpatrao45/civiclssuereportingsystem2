@@ -1,0 +1,43 @@
+
+# How to Run the Civic Issue Reporting System
+
+## Prerequisites
+- Python 3.7 or higher
+- Flask (install via pip)
+- Werkzeug (install via pip)
+
+## Installation Steps
+
+1. **Clone or Download the Project:**
+   - Ensure you have the project files in a directory.
+
+2. **Install Dependencies:**
+   - Open a terminal/command prompt in the project directory.
+   - Run: `pip install -r requirements.txt`
+
+3. **Database Setup:**
+   - The SQLite database is automatically created when you run the app for the first time.
+
+## Running the Application
+
+1. **Start the Flask Server:**
+   - In the terminal, navigate to the project directory.
+   - Run: `python app.py`
+   - The server will start on http://127.0.0.1:5000
+
+2. **Access the Application:**
+   - Open a web browser and go to http://127.0.0.1:5000
+   - You can register as a user or log in as an admin.
+
+## Creating an Admin User
+
+To create an admin user, you can manually insert into the database or use a script. For now, register as a regular user and then update the role in the database.
+
+## Features
+- User Registration and Login
+- Report Issues with Photos
+- Public Dashboard to View Issues
+- Admin Panel to Manage Issues (Update Status, Delete)
+- Separate Admin Login
+
+

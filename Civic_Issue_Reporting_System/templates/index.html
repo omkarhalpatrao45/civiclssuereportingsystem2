@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Civic Issue Reporting System{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h2>Report Civic Issues and Help Improve Your Community</h2>
+    <p>Submit issues like potholes, garbage, broken streetlights, and more — and track their resolution in real-time.</p>
+    {% if not session.user_id %}
+        <a href="{{ url_for('register') }}" class="btn">Start Making a Difference</a>
+    {% endif %}
+</section>
+  
+<section class="features">
+    <h3>Smart City Solutions</h3>
+    <div class="feature-grid">
+        <div class="feature">
+            <i class="fas fa-edit"></i>
+            <h4>Easy Reporting</h4>
+            <p>Submit civic issues quickly and easily through our simple online form. Include photos and detailed descriptions to help authorities understand and resolve problems faster.</p>
+        </div>
+        <div class="feature">
+            <i class="fas fa-chart-line"></i>
+            <h4>Real-Time Tracking</h4>
+            <p>Monitor issue resolution progress with live status updates. Stay informed through automated notifications and detailed progress reports.</p>
+        </div>
+        <div class="feature">
+            <i class="fas fa-map-marked-alt"></i>
+            <h4>Community Insights</h4>
+            <p>Access comprehensive public dashboards to understand community priorities and see how your reports contribute to city improvement.</p>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

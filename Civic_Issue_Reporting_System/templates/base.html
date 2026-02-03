@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Civic Issue Reporting System{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <h1>Civic Issue Reporting System</h1>
+                <ul>
+                    <li><a href="{{ url_for('index') }}"><i class="fas fa-home"></i>Home</a></li>
+                    {% if session.user_id %}
+                        <li><a href="{{ url_for('dashboard') }}"><i class="fas fa-tachometer-alt"></i>My Dashboard</a></li>
+                        <li><a href="{{ url_for('report') }}"><i class="fas fa-plus-circle"></i>Report Issue</a></li>
+                        <li><a href="{{ url_for('public_dashboard') }}"><i class="fas fa-globe"></i>Public Dashboard</a></li>
+                        {% if session.role == 'admin' %}
+                            <li><a href="{{ url_for('admin') }}"><i class="fas fa-user-shield"></i>Admin Panel</a></li>
+                        {% endif %}
+                        <li><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('login') }}"><i class="fas fa-sign-in-alt"></i>Login</a></li>
+                        <li><a href="{{ url_for('admin_login') }}"><i class="fas fa-user-cog"></i>Admin Login</a></li>
+                        <li><a href="{{ url_for('register') }}"><i class="fas fa-user-plus"></i>Register</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <div class="footer-content">
+            <p>&copy; Civic Issue Reporting System. All rights reserved.</p>
+            <p>Contact: support@civicissues.mumbai.gov.in | Phone: (+91) 022-2405 7890</p>
+            <p>Address: Municipal Corporation of Greater Mumbai (MCGM),
+         N Ward Civic Center, Ghatkopar (East),
+         Mumbai, Maharashtra – 400077</p>
+        </div>
+    </footer>
+</body>
+</html>
