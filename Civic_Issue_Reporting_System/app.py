@@ -13,7 +13,7 @@ CORS(app)
 # Secret key from Render Environment Variables
 app.secret_key = os.environ.get("SECRET_KEY", "fallback-secret-key")
 
-# Base directory of project
+# Base directory
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
@@ -22,7 +22,6 @@ DATABASE = os.path.join(BASE_DIR, "database.db")
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["ALLOWED_EXTENSIONS"] = {"png", "jpg", "jpeg", "gif"}
 
-# Ensure upload folder exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # ---------------- DATABASE ----------------
@@ -62,8 +61,10 @@ def init_db():
     conn.commit()
     conn.close()
 
-# Initialize DB when app starts
-init_db()
+try:
+    init_db()
+except Exception as e:
+    print("DB INIT ERROR:", e)
 
 # ---------------- HELPERS ----------------
 
@@ -75,6 +76,8 @@ def allowed_file(filename):
 @app.route("/")
 def index():
     return render_template("index.html")
+
+# ---------- USER AUTH ----------
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -134,6 +137,43 @@ def dashboard():
 
     return render_template("dashboard.html", issues=issues)
 
+# ---------- ADMIN LOGIN ----------
+
+@app.route("/admin_login", methods=["GET", "POST"])
+def admin_login():
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+
+        conn = get_db_connection()
+        admin = conn.execute(
+            "SELECT * FROM users WHERE email=? AND role='admin'",
+            (email,),
+        ).fetchone()
+        conn.close()
+
+        if admin and check_password_hash(admin["password"], password):
+            session["admin_id"] = admin["user_id"]
+            session["role"] = "admin"
+            return redirect(url_for("admin_dashboard"))
+
+        flash("Invalid admin credentials", "error")
+
+    return render_template("admin_login.html")
+
+@app.route("/admin_dashboard")
+def admin_dashboard():
+    if session.get("role") != "admin":
+        return redirect(url_for("admin_login"))
+
+    conn = get_db_connection()
+    issues = conn.execute("SELECT * FROM issues").fetchall()
+    conn.close()
+
+    return render_template("admin_dashboard.html", issues=issues)
+
+# ---------- ISSUE REPORT ----------
+
 @app.route("/report", methods=["GET", "POST"])
 def report():
     if "user_id" not in session:
@@ -167,7 +207,8 @@ def report():
 
     return render_template("report.html")
 
-# ---------------- RUN (local only) ----------------
+# ---------------- RUN ----------------
 
 if __name__ == "__main__":
     app.run()
+
